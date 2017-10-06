@@ -43,7 +43,7 @@ export default {
 
 	methods: {
 		fetchArtile () {
-			this.$get('/api/article/getAll')
+			this.$get('/wx-manager/api/article/getAll')
 				.then(data => this.articles = data)
 		},
 	},

@@ -97,7 +97,7 @@ export default {
 				return
 			}
 
-			this.$post('/api/article/add', this.formData)
+			this.$post('/wx-manager/api/article/add', this.formData)
 				.then(data => this.mediaId = data.media_id)
 		},
 	},

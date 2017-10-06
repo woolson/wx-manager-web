@@ -89,7 +89,7 @@ export default {
 
 	methods: {
 		fetchApps () {
-			this.$get('/api/app/get')
+			this.$get('/wx-manager/api/app/get')
 				.then(data => {
 					this.app = data.filter(o => o.inUse)[0].id + ""
 					this.currentApp = this.app
@@ -97,7 +97,7 @@ export default {
 				})
 		},
 		useApp () {
-			this.$post('/api/app/set', {id: this.app})
+			this.$post('/wx-manager/api/app/set', {id: this.app})
 				.then(data => {
 					this.$Message.success('设置成功')
 					this.currentApp = this.app
@@ -110,7 +110,7 @@ export default {
 				return
 			}
 
-			this.$post('/api/app/add', this.appInfo)
+			this.$post('/wx-manager/api/app/add', this.appInfo)
 				.then(data => {
 					this.fetchApps()
 					this.$Message.success('添加成功')
@@ -118,7 +118,7 @@ export default {
 				})
 		},
 		deleteApp () {
-			this.$post('/api/app/delete', {index: this.app})
+			this.$post('/wx-manager/api/app/delete', {index: this.app})
 				.then(data => {
 					this.$Message.success('删除成功')
 					this.fetchApps()
@@ -128,7 +128,7 @@ export default {
 			this.$Modal.confirm({
 				content: '<h3>确认清零API接口调用次数？</h3><p>(每个帐号每月共10次清零操作机会)</p>',
 				onOk: () => {
-					this.$post('/api/app/clear')
+					this.$post('/wx-manager/api/app/clear')
 						.then(data => this.$Message.success('清零成功'))
 				},
 			})

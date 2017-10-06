@@ -46,7 +46,7 @@ export default {
 
 	methods: {
 		fetchData () {
-			this.$get('/api/material/get', {type: this.type})
+			this.$get('/wx-manager/api/material/get', {type: this.type})
 				.then(data => this.list = data.item)
 		},
 	},
