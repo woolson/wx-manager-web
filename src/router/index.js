@@ -39,7 +39,7 @@ function parseRoute (items) {
 
 const RootRouter = new Router({
 	mode: 'history',
-	base: process.env.NODE_ENV === 'production' ? '/wx/manager/' : '',
+	base: process.env.NODE_ENV === 'production' ? '/wx-manager/' : '',
 	routes,
 })
 
