@@ -26,13 +26,6 @@ div.setting.common-block
 							:disabled="this.app == this.currentApp"
 						) 使用
 						Button(
-							type="info"
-							shape="circle"
-							size="small"
-							:disabled="this.app == this.currentApp"
-							@click="deleteApp"
-						) 编辑
-						Button(
 							type="error"
 							shape="circle"
 							size="small"
