@@ -1,6 +1,6 @@
 import axios from 'axios'
 import iView from 'iview'
-import { obj2Params } from 'src/common/utils'
+import { obj2Params, getType } from 'src/common/utils'
 
 export const post = (url, data, options) => {
 	return common('POST', url, data, options)
@@ -10,10 +10,23 @@ export const get = (url, data, options) => {
 	return common('GET', url, data, options)
 }
 
-const common = (type, url, data, options = {}) => {
+export const common = (type, url, data, options = {}) => {
+	if (getType(url) === 'object') {
+		const request = url
+		url = request.url
+		data = request.data
+		options = request.options || {}
+	}
+	// 设置默认值
+	options = Object.assign({
+		// 显示loading
+		process: true,
+		// 超时时间
+		timeout: null,
+	}, options)
+
 	var config = {
 		method: type,
-		cache: options.cache === undefined ? false : options.cache,
 		dataType: 'json',
 		timeout: options.timeout,
 		withCredentials: true,
@@ -22,13 +35,10 @@ const common = (type, url, data, options = {}) => {
 		},
 	}
 
-	if (type.toLowerCase() === 'get') {
-		const params = data ? obj2Params(data) : '{}'
-		config.url = `${url}?${params}`
-	} else {
-		config.url = url
-		config.data = data || {}
-	}
+	config.url = 'http://localhost:3000' + url
+
+	if (type.toLowerCase() === 'get') config.params = data
+	else config.data = data
 
 	if (!options.disableLoading) {
 		// 添加loading
@@ -43,7 +53,7 @@ const common = (type, url, data, options = {}) => {
 					errorMessage: resData.msg,
 					error: true,
 				}
-				iView.Message.error('获取数据错误')
+				iView.Message.error(JSON.stringify(resData))
 				return Promise.reject(error)
 			}
 		})

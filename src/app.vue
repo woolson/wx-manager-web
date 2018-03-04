@@ -17,6 +17,9 @@ div#app
 				Icon(type="images")
 				span 媒体
 			MenuItem(name="3")
+				Icon(type="android-menu")
+				span 菜单
+			MenuItem(name="4")
 				Icon(type="settings")
 				span 设置
 	router-view
@@ -27,6 +30,7 @@ const PATH = [
 	'/',
 	'/article',
 	'/media',
+	'/menu',
 	'/setting',
 ]
 

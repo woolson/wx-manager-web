@@ -5,8 +5,11 @@ div.setting.common-block
 		TabPane(label="测试号列表")
 			RadioGroup(v-model="app")
 				ul.setting__apps
-					li(v-for="item in apps")
-						Radio(:label="item.id") &nbsp;
+					li(
+						v-for="item,index in apps"
+						:key="index"
+					)
+						Radio(:label="item.appId") &nbsp;
 						div.content
 							h3 {{item.name}}
 							div
@@ -41,7 +44,9 @@ div.setting.common-block
 					FormItem(label="AppId")
 						Input(v-model="appInfo.appId" placeholder="请输入ID")
 					FormItem(label="Secret")
-						Input(v-model="appInfo.secret" placeholder="请输入秘钥")
+						Input(v-model="appInfo.appSecret" placeholder="请输入秘钥")
+					FormItem(label="添加密码")
+						Input(v-model="appInfo.password" placeholder="请输入添加密码")
 					FormItem.setting__add__buttons
 						Button.u-w80(
 							type="success"
@@ -81,29 +86,25 @@ export default {
 	},
 
 	methods: {
-		fetchApps () {
-			this.$get('/wx-manager/api/app/get')
-				.then(data => {
-					this.app = data.filter(o => o.inUse)[0].id + ""
-					this.currentApp = this.app
-					this.apps = data
-				})
+		async fetchApps () {
+			this.apps = await this.$get('/wx-manager/api/app/get')
+			this.app = (this.apps.find(o => o.checked) || {}).appId
 		},
 		useApp () {
-			this.$post('/wx-manager/api/app/set', {id: this.app})
+			this.$post('/wx-manager/api/app/set', {appId: this.app})
 				.then(data => {
 					this.$Message.success('设置成功')
 					this.currentApp = this.app
 				})
 		},
 		addApp () {
-			const { name, appId, secret } = this.appInfo
-			if(!name || !appId || !secret) {
+			const { name, appId, appSecret, password } = this.appInfo
+			if(!name || !appId || !appSecret || !password) {
 				this.$Message.error('请填写完整')
 				return
 			}
 
-			this.$post('/wx-manager/api/app/add', this.appInfo)
+			this.$post(`/wx-manager/api/app/add`, this.appInfo)
 				.then(data => {
 					this.fetchApps()
 					this.$Message.success('添加成功')
@@ -111,8 +112,9 @@ export default {
 				})
 		},
 		deleteApp () {
-			this.$post('/wx-manager/api/app/delete', {index: this.app})
+			this.$get('/wx-manager/api/app/delete', {appId: this.app})
 				.then(data => {
+					this.appInfo = {}
 					this.$Message.success('删除成功')
 					this.fetchApps()
 				})
@@ -121,7 +123,7 @@ export default {
 			this.$Modal.confirm({
 				content: '<h3>确认清零API接口调用次数？</h3><p>(每个帐号每月共10次清零操作机会)</p>',
 				onOk: () => {
-					this.$post('/wx-manager/api/app/clear')
+					this.$get('/wx-manager/api/app/reset')
 						.then(data => this.$Message.success('清零成功'))
 				},
 			})

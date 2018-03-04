@@ -3,11 +3,15 @@ div.home.common-block
 	div
 		i.wm-weixin1.wm
 		p 微信素材管理
-</div>
 </template>
 
 <script>
 export default {
+	data () {
+		return {
+			
+		}
+	}
 }
 </script>
 

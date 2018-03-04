@@ -12,6 +12,7 @@ const config = [
 	{ path: '/article/add', name: 'articleAdd' },
 	{ path: '/media', name: 'media' },
 	{ path: '/media/add', name: 'mediaAdd' },
+	{ path: '/menu', name: 'menu' },
 	{ path: '/setting', name: 'setting' },
 ]
 
@@ -52,6 +53,7 @@ RootRouter.beforeEach((to, from, next) => {
 		articleAdd: '添加图文',
 		media: '媒体',
 		mediaAdd: '添加媒体',
+		menu: '菜单',
 		setting: '设置',
 	}
 	// 切换页面修改title
