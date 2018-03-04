@@ -88,7 +88,7 @@ export default {
 				formData.append('media', o)
 			})
 
-			this.$post('/wx-manager/api/image/add', formData)
+			this.$post('/wx-manager/api/material/add', formData)
 				.then(data => {
 					this.result = this.result.concat(data)
 					this.files = null

@@ -1,6 +1,12 @@
 <template lang="pug">
 div.media.common-block
 	h2 媒体列表
+	Select(v-model="type" style="width:200px")
+		Option(
+			v-for="item in typeList"
+			:value="item.value"
+			:key="item.value"
+		) {{ item.label }}
 	div
 		Button(
 			type="info"
@@ -15,18 +21,12 @@ div.media.common-block
 			size="small"
 			@click="$router.push('/media/add')"
 		) 添加媒体
-	Form
-		FormItem(label="媒体类型")
-			RadioGroup(v-model="type")
-				Radio(label="image") 图片
-				Radio(label="vedio") 视频
-				Radio(label="voice") 声音
 	list(
-		:list="list"
+		:list="list[type]"
 		title="素材列表"
-		v-show="list !== null && list.length !== 0"
+		v-show="list[type].length"
 	)
-	p(v-show="list && list.length === 0") 暂无内容
+	p(v-show="!list[type].length") 暂无内容
 </template>
 
 <script>
@@ -39,15 +39,24 @@ export default {
 
 	data () {
 		return {
+			typeList: [
+				{ label: '图片', value: 'image' },
+				{ label: '视频', value: 'video' },
+				{ label: '声音', value: 'voice' },
+			],
 			type: 'image',
-			list: null,
+			list: {
+				image: [],
+				video: [],
+				voice: [],
+			},
 		}
 	},
 
 	methods: {
 		fetchData () {
 			this.$get('/wx-manager/api/material/get', {type: this.type})
-				.then(data => this.list = data.item)
+				.then(data => this.$set(this.list, this.type, data.item))
 		},
 	},
 }

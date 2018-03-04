@@ -46,15 +46,16 @@ export const common = (type, url, data, options = {}) => {
 	}
 
 	return axios(config).
-		then(resData => {
-			if (resData.success) return resData.data || {}
+		then(({success, data, error: errorMsg}) => {
+			if (success) return data || {}
 			else {
+				const msg = getType(errorMsg) === 'object' ? errorMsg.errmsg : errorMsg
 				const error = {
-					errorMessage: resData.msg,
+					errorMessage: msg,
 					error: true,
 				}
-				iView.Message.error(JSON.stringify(resData))
-				return Promise.reject(error)
+				iView.Message.error(msg)
+				return Promise.reject(errorMsg)
 			}
 		})
 }
