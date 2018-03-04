@@ -2,6 +2,8 @@ import axios from 'axios'
 import iView from 'iview'
 import { obj2Params, getType } from 'src/common/utils'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 export const post = (url, data, options) => {
 	return common('POST', url, data, options)
 }
@@ -34,8 +36,8 @@ export const common = (type, url, data, options = {}) => {
 			'content-type': 'application/json;charset=utf-8',
 		},
 	}
-
-	config.url = 'http://localhost:3000' + url
+	const baseUrl = isProduction ? '' : 'http://localhost:3000'
+	config.url = baseUrl + url
 
 	if (type.toLowerCase() === 'get') config.params = data
 	else config.data = data
